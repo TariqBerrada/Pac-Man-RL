@@ -20,11 +20,13 @@ for i in range(N):
     while not termination:
         # Draw screen
 
-        action = env.next_action_keyboard()
+        action = "left" # env.next_action_keyboard()
+        
         # Actions possibles : "right", "left", "up", "down", "quit"
         env.env_step(action)
 
         reward, state, termination = env.reward_state_term
+        print(state.shape)
 
     print("Score final : " + env.pacman.score)
 

@@ -79,6 +79,10 @@ class PACMAN_Environment():
         state = self.pacman.rect
         self.reward_state_term = (reward, state, termination)
 
+        # return initial state.
+        arr = pygame.surfarray.array3d(self.screen).transpose(1, 0, 2)
+        return arr
+
     
     def env_end(self, reward):
         """
@@ -123,7 +127,7 @@ class PACMAN_Environment():
         # reward = self.pacman.score
         reward = self.pacman.score - last_score
         termination = action == "quit"
-        state = self.pacman.rect
+        state = arr # self.pacman.rect ## stat is the image screen.
 
         self.reward_state_term = (reward, state, termination)
 
