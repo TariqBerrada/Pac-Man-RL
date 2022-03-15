@@ -1,48 +1,34 @@
 import pygame
 import time
 from game import Game
+from environment import PACMAN_Environment
 
 import matplotlib.pyplot as plt
 
-pygame.init()
+N = 2
 
-h, w = 512, 512
+env = PACMAN_Environment()
+env.env_init()
 
-pygame.display.set_caption('Pac-Man')
-screen = pygame.display.set_mode((w, h))
+for i in range(N):
 
-# set background.
-background = pygame.image.load('assets/map.png')
-background = pygame.transform.scale(background, (512, 512))
+    print(f"Episode {i+1}/{N}")
 
-game = Game()
+    env.env_start()
+    termination = False
 
-running = True
-while True:
-    screen.blit(background, dest = (0, 0))
+    while not termination:
+        # Draw screen
 
-    game.update(screen)
-    ret = pygame.display.flip()
-    # pygame.image.save(screen, 'temp.jpg')
-    arr = pygame.surfarray.array3d(screen).transpose(1, 0, 2)
-    # print(arr.shape)
-    plt.imsave('temp.jpg', arr)
+        action = env.next_action_keyboard()
+        # Actions possibles : "right", "left", "up", "down", "quit"
+        env.env_step(action)
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-            pygame.quit()
-        elif event.type == pygame.KEYDOWN:
-            game.pressed[event.key] = True
+        reward, state, termination = env.reward_state_term
 
-            # if event.key == pygame.K_RIGHT:
-            #     game.pacman.move_right()
-            # if event.key == pygame.K_LEFT:
-            #     game.pacman.move_left()
-            # if event.key== pygame.K_UP:
-            #     game.pacman.move_up()
-            # if event.key == pygame.K_DOWN:
-            #     game.pacman.move_down()
-        elif event.type == pygame.KEYUP:
-            game.pressed[event.key] = False
-    # time.sleep(0.01)
+    print("Score final : " + env.pacman.score)
+
+    env.env_end(reward)
+    env.env_cleanup()
+
+   # time.sleep(0.01)

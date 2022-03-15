@@ -32,14 +32,7 @@ class PACMAN_Environment():
 
         self.map = joblib.load('assets/grid.pt')
 
-        pygame.init()
-
-        h, w = 512, 512
-
-        pygame.display.set_caption('Pac-Man')
-        self.screen = pygame.display.set_mode((w, h))
-
-        # set background.
+            # set background.
         self.background = pygame.image.load('assets/map.png')
         self.background = pygame.transform.scale(self.background, (512, 512))
     
@@ -54,9 +47,18 @@ class PACMAN_Environment():
         """
         reward = 0
 
-        self.game = Game()
+        pygame.init()
 
-        self.pacman = PacMan(self.game)
+        h, w = 512, 512
+
+        pygame.display.set_caption('Pac-Man')
+        self.screen = pygame.display.set_mode((w, h))
+
+
+        # self.game = Game()
+
+        # self.pacman = PacMan(self.game)
+        self.pacman = PacMan(self)
         self.all_players = pygame.sprite.Group()
         self.all_players.add(self.pacman)
 
@@ -92,30 +94,22 @@ class PACMAN_Environment():
             (float, state, Boolean): a tuple of the reward, state observation,
                 and boolean indicating if it's terminal.
         """
+
         self.screen.blit(self.background, dest = (0, 0))
-        self.screen.blit(self.pacman.image, self.pacman.rect)# add dots.
+        self.screen.blit(self.pacman.image, self.pacman.rect)
 
+        self.all_dots.draw(self.screen)
 
-        self.game.update(self.screen)
         ret = pygame.display.flip()
         # pygame.image.save(screen, 'temp.jpg')
         arr = pygame.surfarray.array3d(self.screen).transpose(1, 0, 2)
         # print(arr.shape)
         plt.imsave('temp.jpg', arr)
 
-
-        
         last_score = self.pacman.score
+
         self.all_dots.draw(self.screen)
 
-        # if self.pressed.get(pygame.K_RIGHT) and self.pacman.rect.x + self.pacman.rect.width < self.w-21:
-        #     self.pacman.move_right()
-        # if self.pressed.get(pygame.K_LEFT) and self.pacman.rect.x > 21:
-        #     self.pacman.move_left()
-        # if self.pressed.get(pygame.K_UP) and self.pacman.rect.y > 21:
-        #     self.pacman.move_up()
-        # if self.pressed.get(pygame.K_DOWN) and self.pacman.rect.y + self.pacman.rect.height < self.h-21:
-        #     self.pacman.move_down()
         if action == "right" and self.pacman.rect.x + self.pacman.rect.width < self.w-21:
             self.pacman.move_right()
         if action == "left" and self.pacman.rect.x > 21:
@@ -133,7 +127,7 @@ class PACMAN_Environment():
 
         self.reward_state_term = (reward, state, termination)
 
-    def next_action(self):
+    def next_action_keyboard(self):
 
         action = ""
 
@@ -144,6 +138,7 @@ class PACMAN_Environment():
                 self.pressed[event.key] = True
             elif event.type == pygame.KEYUP:
                 self.pressed[event.key] = False
+
         if self.pressed.get(pygame.K_RIGHT) and self.pacman.rect.x + self.pacman.rect.width < self.w-21:
             action = "right"
         if self.pressed.get(pygame.K_LEFT) and self.pacman.rect.x > 21:
@@ -157,6 +152,11 @@ class PACMAN_Environment():
 
     def env_cleanup(self):
         """Cleanup done after the environment ends"""
+        reward = None
+        state = None
+        termination = None
+        self.reward_state_term = (reward, state, termination)
+
 
     def env_message(self, message):
         """A message asking the environment for information
@@ -165,3 +165,5 @@ class PACMAN_Environment():
         Returns:
             the response (or answer) to the message
         """
+    def check_collision(self, sprite, group):
+        return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)

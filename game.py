@@ -27,12 +27,11 @@ class Game():
         return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)
     
     
-    def update(self, screen):
-        # add pacman
-        screen.blit(self.pacman.image, self.pacman.rect)
+    def update(self, screen, verbose):
 
         # add dots.
-        self.all_dots.draw(screen)
+        if verbose > 1:
+            self.all_dots.draw(screen)
 
         if self.pressed.get(pygame.K_RIGHT) and self.pacman.rect.x + self.pacman.rect.width < self.w-21:
             self.pacman.move_right()
