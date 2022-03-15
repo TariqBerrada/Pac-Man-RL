@@ -1,5 +1,6 @@
 import pygame
 import time, cv2
+import tqdm
 
 import numpy as np
 
@@ -9,7 +10,7 @@ from agents.dqn import Agent
 
 import matplotlib.pyplot as plt
 
-num_episodes = 2
+num_episodes = 20000
 imsize = 224
 
 # Initialize environment.
@@ -17,7 +18,7 @@ env = PACMAN_Environment()
 env.env_init()
 
 # Intialize agent.
-agent = Agent(gamma=.95, epsilon = 1.0, batch_size= 512, n_actions =4, eps_dec=5e-5, eps_end=1e-4, input_dims= [224, 224], lr = 1e-3)
+agent = Agent(gamma=.95, epsilon = 1.0, batch_size= 512, n_actions =4, eps_dec=5e-5, eps_end=1e-4, input_dims= [224, 224], lr = 1e-3, max_mem_size = 10000)
 
 action_map = {
     0: "left",
@@ -31,7 +32,7 @@ scores, eps_history = [], []
 avg_scores = []
 len_history, avg_len_history = [], []
 
-for i in range(num_episodes):
+for i in tqdm.tqdm(range(num_episodes)):
 
     print(f"Episode {i+1}/{num_episodes}")
 
@@ -56,7 +57,7 @@ for i in range(num_episodes):
         score += reward
         ep_len += 1
 
-    print("Score final : " + env.pacman.score)
+    print("Score final : " + str(env.pacman.score))
 
     env.env_end(reward)
     env.env_cleanup()

@@ -11,11 +11,11 @@ class DeepQConvNetwork(nn.Module):
         self.n_actions = n_actions
         self.hidden_dim = hidden_dim
 
-        self.conv1 = nn.Conv2d(3, 32, kernel_size = 7, stride = 2)
+        self.conv1 = nn.Conv2d(3, 32, kernel_size = 7, stride = 3)
         self.conv2 = nn.Conv2d(32, 64, kernel_size = 5, stride = 2)
-        self.conv3 = nn.Conv2d(64, 64, kernel_size=3, stride = 1)
-
-        self.fc1 = nn.Linear(192, self.hidden_dim)
+        self.conv3 = nn.Conv2d(64, 64, kernel_size=5, stride = 2)
+        self.pool = nn.AvgPool2d(kernel_size = 4, stride = 2)
+        self.fc1 = nn.Linear(3136, self.hidden_dim)
         # self.fc2 = nn.Linear(self.fc1_dims, self.fc2_dims)
         self.fc2 = nn.Linear(self.hidden_dim, self.n_actions)
 
@@ -39,11 +39,13 @@ class DeepQConvNetwork(nn.Module):
 
     def forward(self, state):
         # print('state', state.shape)
-        x = F.elu(self.conv1(state.unsqueeze(1)))
+        state = state.permute(0, 3, 1, 2)
+        # print('after', state.shape)
+        x = F.elu(self.conv1(state)) # unsqueeze 1 else
         #print(1, x.shape)
         x = F.elu(self.conv2(x))
         # print('2', x.shape)
-        x = F.elu(self.conv3(x))
+        x = F.elu(self.pool(self.conv3(x)))
         # print('out0', x.shape)
         x = x.reshape(x.shape[0], -1)
         # print('out1', x.shape)
