@@ -4,24 +4,26 @@ from characters.pacman import PacMan
 from characters.dot import Dot
 
 class Game():
-    def __init__(self, nrow=19, ncol = 17):
-        self.map = joblib.load('assets/grid.pt')
+    def __init__(self, nrow=21, ncol = 19):
+        self.map = joblib.load('assets/grid_sparse.pt')
         self.all_players = pygame.sprite.Group()
         self.pacman = PacMan(self)
         self.all_players.add(self.pacman)
 
         self.all_dots = pygame.sprite.Group()
-        for i in range(1,nrow+1):
-            for j in range(1, ncol+1):
+        for i in range(nrow):
+            for j in range(ncol):
                 self.all_dots.add(Dot(self, i, j))
         
         for dot in self.all_dots:
             dot.check()
 
         self.pressed = {}
+        self.scale = 15
 
-        self.h = 512
-        self.w = 512
+        self.h = 21*self.scale # 512
+        self.w = 19*self.scale # 512
+
 
     def check_collision(self, sprite, group):
         return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)

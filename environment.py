@@ -29,17 +29,22 @@ class PACMAN_Environment():
         state = None
         termination = None
         self.reward_state_term = (reward, state, termination)
+        self.scale = 15
 
-        self.map = joblib.load('assets/grid.pt')
+        self.map = joblib.load('assets/grid_sparse.pt')
 
             # set background.
         self.background = pygame.image.load('assets/map.png')
-        self.background = pygame.transform.scale(self.background, (512, 512))
+        self.background = pygame.transform.scale(self.background, (19*self.scale, 21*self.scale))
+        self.rect = self.background.get_rect()
+        print('r', self.rect)
+        self.rect = self.rect.move((0, 0))
+        print(self.map.shape, '___')
     
     
 
 
-    def env_start(self, nrow=19, ncol = 17):
+    def env_start(self, nrow=21, ncol = 19):
         """The first method called when the experiment starts, called before the
         agent starts.
         Returns:
@@ -49,10 +54,10 @@ class PACMAN_Environment():
 
         pygame.init()
 
-        h, w = 512, 512
+        h, w = 19*self.scale, 21*self.scale
 
         pygame.display.set_caption('Pac-Man')
-        self.screen = pygame.display.set_mode((w, h))
+        self.screen = pygame.display.set_mode((h, w))
 
 
         # self.game = Game()
@@ -63,8 +68,8 @@ class PACMAN_Environment():
         self.all_players.add(self.pacman)
 
         self.all_dots = pygame.sprite.Group()
-        for i in range(1,nrow+1):
-            for j in range(1, ncol+1):
+        for i in range(nrow):
+            for j in range(ncol):
                 self.all_dots.add(Dot(self, i, j))
         
         for dot in self.all_dots:
@@ -72,8 +77,8 @@ class PACMAN_Environment():
 
         self.pressed = {}
 
-        self.h = 512
-        self.w = 512
+        self.h = h
+        self.w = w
 
         termination = False
         state = self.pacman.rect

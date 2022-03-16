@@ -2,7 +2,7 @@ import pygame
 import time
 from game import Game
 from environment import PACMAN_Environment
-
+import numpy as np
 import matplotlib.pyplot as plt
 
 N = 2
@@ -20,7 +20,7 @@ for i in range(N):
     while not termination:
         # Draw screen
 
-        action = env.next_action_keyboard()
+        action = np.random.choice(["right", "left", "up", "down"])# env.next_action_keyboard()
         
         # Actions possibles : "right", "left", "up", "down", "quit"
         env.env_step(action)
