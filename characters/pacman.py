@@ -9,7 +9,7 @@ class PacMan(pygame.sprite.Sprite):
 
         self.score = 0
 
-        self.velocity = 1
+        self.velocity = 7
         self.size = 20
 
         self.image = pygame.image.load('assets/pacman.png')
