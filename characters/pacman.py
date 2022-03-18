@@ -31,7 +31,7 @@ class PacMan(pygame.sprite.Sprite):
         for dot in self.game.check_collision(self, self.game.all_dots):
             self.game.all_dots.remove(dot)
             self.score += dot.reward
-            print(self.score)
+            # print(self.score)
 
     def move_right(self):
         # print(self.image.get_rect())

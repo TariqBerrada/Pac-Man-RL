@@ -1,6 +1,7 @@
 import joblib
 import pygame
 import matplotlib.pyplot as plt
+import numpy as np
 
 from characters.pacman import PacMan
 from characters.dot import Dot
@@ -35,7 +36,8 @@ class PACMAN_Environment():
             # set background.
         self.background = pygame.image.load('assets/map.png')
         self.background = pygame.transform.scale(self.background, (512, 512))
-    
+
+        self.np_background = plt.imread('assets/map.png')
     
 
 
@@ -63,6 +65,7 @@ class PACMAN_Environment():
         self.all_players.add(self.pacman)
 
         self.all_dots = pygame.sprite.Group()
+        self.np_all_dots = np.ones((nrow, ncol))
         for i in range(1,nrow+1):
             for j in range(1, ncol+1):
                 self.all_dots.add(Dot(self, i, j))

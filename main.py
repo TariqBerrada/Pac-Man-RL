@@ -2,6 +2,7 @@ import pygame
 import time
 from game import Game
 from environment import PACMAN_Environment
+from utils.numpy_display import display
 
 import matplotlib.pyplot as plt
 
@@ -9,28 +10,31 @@ N = 2
 
 env = PACMAN_Environment()
 env.env_init()
+env.env_start()
 
-for i in range(N):
+display(env)
 
-    print(f"Episode {i+1}/{N}")
+# for i in range(N):
 
-    env.env_start()
-    termination = False
+#     print(f"Episode {i+1}/{N}")
 
-    while not termination:
-        # Draw screen
+#     env.env_start()
+#     termination = False
 
-        action = "left" # env.next_action_keyboard()
+#     while not termination:
+#         # Draw screen
+
+#         action = "left" # env.next_action_keyboard()
         
-        # Actions possibles : "right", "left", "up", "down", "quit"
-        env.env_step(action)
+#         # Actions possibles : "right", "left", "up", "down", "quit"
+#         env.env_step(action)
 
-        reward, state, termination = env.reward_state_term
-        print(state.shape)
+#         reward, state, termination = env.reward_state_term
+#         print(state.shape)
 
-    print("Score final : " + env.pacman.score)
+#     print("Score final : " + env.pacman.score)
 
-    env.env_end(reward)
-    env.env_cleanup()
+#     env.env_end(reward)
+#     env.env_cleanup()
 
    # time.sleep(0.01)
