@@ -1,11 +1,8 @@
-# import pygame
 import time
 from game import Game
 from environment_npy import PACMAN_Environment
 import numpy as np
 import matplotlib.pyplot as plt
-# import os
-# os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 N = 2
 
@@ -19,8 +16,6 @@ for i in range(N):
     env.env_start()
     termination = False
 
-    # while not termination:
-        # Draw screen
     max_step = 1000
     j = 0
     while j < max_step and not termination:
@@ -30,7 +25,6 @@ for i in range(N):
         env.env_step(action)
 
         reward, state, termination = env.reward_state_term
-        # print(state.shape)
         plt.imsave("anim/_img%.3d.jpg"%k, state.clip(0, 1))
         k += 1
         j += 1
@@ -38,5 +32,3 @@ for i in range(N):
 
     env.env_end(reward)
     env.env_cleanup()
-
-   # time.sleep(0.01)

@@ -16,9 +16,8 @@ map_r[::72, :] = 1
 
 grid = block_reduce(map_r, (72, 72), np.median)[:-1, :-1] > 0
 joblib.dump(grid, "assets/grid_sparse.pt")
-print(grid.shape)
-fig, ax = plt.subplots(1, 2)
 
+fig, ax = plt.subplots(1, 2)
 ax[0].imshow(map_r)
 ax[1].imshow(grid > .3)
 plt.show()

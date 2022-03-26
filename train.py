@@ -1,19 +1,14 @@
-# import pygame
 import time, cv2
 import tqdm
 
 import numpy as np
 
-# from game import Game
 from environment_npy import PACMAN_Environment
 from agents.dqn import Agent
 
 import matplotlib.pyplot as plt
 
-# import os
-# os.environ["SDL_VIDEODRIVER"] = "dummy"
-
-num_episodes = 200
+num_episodes = 5000
 max_ep_len = 2000
 resolution = 5
 h, w = 19*resolution, 21*resolution
@@ -23,7 +18,7 @@ env = PACMAN_Environment()
 env.env_init()
 
 # Intialize agent.
-agent = Agent(gamma=.95, epsilon = 1.0, batch_size = 64, n_actions =4, eps_dec=5e-5, eps_end=1e-2, input_dims= [w, h, 3], lr = 1e-4, max_mem_size=2000)
+agent = Agent(gamma=.98, epsilon = 1.0, batch_size = 64, n_actions =4, eps_dec=7e-6, eps_end=1e-2, input_dims= [w, h, 3], lr = 1e-3, max_mem_size=20000)
 
 action_map = {
     0: "left",
@@ -38,18 +33,14 @@ avg_scores = []
 len_history, avg_len_history = [], []
 
 for i in tqdm.tqdm(range(num_episodes)):
-    # agent.epsilon = 1
     k = 0
-
-    # print(f"Episode {i+1}/{num_episodes}")
 
     observation = env.env_start()
     observation = cv2.resize(observation, (h, w))
     termination = False
+
     score, ep_len = 0, 0
-    # need an initial observation.
-    # while not termination:
-    # for _ in range(200): # cste number of steps for now.
+
     while k < max_ep_len and not termination:
         action = agent.choose_action(observation)
         A = action_map[action] # int to str
@@ -64,11 +55,6 @@ for i in tqdm.tqdm(range(num_episodes)):
 
         score += reward
         ep_len += 1
-    # plt.figure()
-    # plt.imshow(observation)
-    # plt.axis('off')
-    # plt.show()
-    # print("Score final : " + str(env.pacman.score))
 
     env.env_end(reward)
     env.env_cleanup()
@@ -85,7 +71,7 @@ for i in tqdm.tqdm(range(num_episodes)):
     if i%10 == 0:
         print(f'ep {i} - score {score} - avg_score {avg_score} - episode {avg_len} - epsilon {agent.epsilon}')
         agent.save()
-        plt.imsave("anim/img%.3d.jpg"%i, observation.clip(0, 1))
+        plt.imsave("last_frame.jpg", observation.clip(0, 1))
 
     if i%10 == 0:
         fig, ax = plt.subplots(1, 2, figsize = (15, 4))
@@ -97,14 +83,14 @@ for i in tqdm.tqdm(range(num_episodes)):
         ax[0].legend()
 
 
-        # ax[1].plot(len_history, label = "episode length")
-        # ax[1].plot(avg_len_history, label = "episode length (average")
-        # ax[1].set_xlabel('episode')
-        # ax[1].set_ylabel('length')
-        # ax[1].set_title('Deep Q-learning episode length evolution')
-        # ax[1].legend()
-        ax[1].semilogy(eps_history)
+        ax[1].plot(len_history, label = "episode length")
+        ax[1].plot(avg_len_history, label = "episode length (average")
         ax[1].set_xlabel('episode')
-        ax[1].set_ylabel('$\epsilon$')
+        ax[1].set_ylabel('length')
+        ax[1].set_title('Deep Q-learning episode length evolution')
+        ax[1].legend()
+        # ax[1].semilogy(eps_history)
+        # ax[1].set_xlabel('episode')
+        # ax[1].set_ylabel('$\epsilon$')
         plt.savefig('figures/dqn.jpg')
         plt.close()

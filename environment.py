@@ -37,10 +37,9 @@ class PACMAN_Environment():
         self.background = pygame.image.load('assets/map.png')
         self.background = pygame.transform.scale(self.background, (19*self.scale, 21*self.scale))
         self.rect = self.background.get_rect()
-        print('r', self.rect)
+        
         self.rect = self.rect.move((0, 0))
-        print(self.map.shape, '___')
-    
+        
     
 
 
@@ -59,10 +58,6 @@ class PACMAN_Environment():
         pygame.display.set_caption('Pac-Man')
         self.screen = pygame.display.set_mode((h, w))
 
-
-        # self.game = Game()
-
-        # self.pacman = PacMan(self.game)
         self.pacman = PacMan(self)
         self.all_players = pygame.sprite.Group()
         self.all_players.add(self.pacman)
@@ -110,10 +105,10 @@ class PACMAN_Environment():
         self.all_dots.draw(self.screen)
 
         ret = pygame.display.flip()
-        # pygame.image.save(screen, 'temp.jpg')
+        
         arr = pygame.surfarray.array3d(self.screen).transpose(1, 0, 2)
-        # print(arr.shape)
-        plt.imsave('temp.jpg', arr)
+    
+        # plt.imsave('temp.jpg', arr)
 
         last_score = self.pacman.score
 

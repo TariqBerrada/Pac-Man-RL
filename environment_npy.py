@@ -6,10 +6,9 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
-from characters.pacman_npy import Pacman# map_npy import Pacman
+from characters.pacman_npy import Pacman
 from characters.ghost_npy import Ghost
-# from characters.dot import Dot
-# from game import Game
+
 
 class PACMAN_Environment():
     """Implements the environment for an RLGlue environment
@@ -100,21 +99,7 @@ class PACMAN_Environment():
             (float, state, Boolean): a tuple of the reward, state observation,
                 and boolean indicating if it's terminal.
         """
-
-        # self.screen.blit(self.background, dest = (0, 0))
-        # self.screen.blit(self.pacman.image, self.pacman.rect)
-
-        # self.all_dots.draw(self.screen)
-
-        # ret = pygame.display.flip()
-        # pygame.image.save(screen, 'temp.jpg')
-        # arr = pygame.surfarray.array3d(self.screen).transpose(1, 0, 2)
-        # # print(arr.shape)
-        # plt.imsave('temp.jpg', arr)
-
         last_score = self.pacman.score
-
-        # self.all_dots.draw(self.screen)
 
         if action == "right" and self.pacman.x + 1 < self.w//self.scale-1:
             self.pacman.move_right()
@@ -139,10 +124,10 @@ class PACMAN_Environment():
                 ghost.move_down()
             win += ghost.win
 
-        # reward = self.pacman.score
+        
         reward = self.pacman.score - last_score
-        termination = win# action == "quit"
-        state = self.map # self.pacman.rect ## stat is the image screen.
+        termination = win
+        state = self.map 
 
         self.reward_state_term = (reward, state, termination)
         return self.reward_state_term
@@ -164,5 +149,3 @@ class PACMAN_Environment():
             the response (or answer) to the message
         """
         pass
-    # def check_collision(self, sprite, group):
-    #     return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)
